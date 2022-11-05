@@ -144,3 +144,33 @@ The below expressions show the usage of url_for.
     url_for('hello') returns the URL /
 
     url_for('hello_user', username='Michael') returns /user/Michael
+
+
+Using Templats in Flask
+Displaying HTML Pages
+
+
+Creating Your First Template
+In Flask, a template is a separate file present inside templates folder located in an application package.
+For understanding, working with templates, let's create a folder named templates in helloapp folder.
+Let's also convert helloapp folder into a package by creating an empty __init__.py in it as shown below.
+(projenv) $ mkdir templates
+
+(projenv) $ touch __init__.py
+
+in index.html
+
+Most of the content specified is simple html content, except the one enclosed in {{ ... }} portion.
+These portions represent parts of a page, which are variable and occupies the values passed to the rendering template.
+
+Conditionals in Templates
+Templates in Flask also support the usage of conditional statements, mentioned in {% ... %} blocks.
+            {% if user %}
+        <h1>Hello {{user}}!!!</h1>
+        {% else %}
+        <h1>Hello World!!!</h1>
+        {% endif %}
+
+Loops in Templates
+It is also possible to write loops inside templates.
+You can write for loop inside {% ... %} blocks.
