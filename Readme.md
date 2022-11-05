@@ -98,3 +98,49 @@ You can also upgrade a package with below command
 pip install --upgrade <package_name> 
 
 
+3) Handling Web requests
+Flask handles web requests through Routing.
+
+Flask directs a web request to function, which is bind to the request URL using route decorator.
+
+Then the bound function processes the request and returns an HTTP response to the user.
+
+The route decorator takes one parameter named rule. The value passed to rule parameter represents the URL accessed by a user.
+
+
+Variable Rules
+Flask allows capturing different portions of a URL and pass them to the bound function, as parameters, for further processing.
+
+For achieving this, the rule parameter value is allowed to contain variable parts, representing portions of accessed URL, which needs to be captured.
+
+The variable part of a rule parameter value is identified by a name, and the variable name is embedded inside a pair of angle brackets.
+
+
+Variable Part Converters
+Any value captured by variable part of a rule parameter is a string.
+Flask provides variable part converters, which can be used to convert default string value into another type.
+Allowed converters are:
+    int - Converts to an integer,
+
+    float - Converts to a float, and
+
+    path - Converts to a directory path, i.e. it accepts slashes that are used as directory path separator.
+
+
+
+
+Redirecting a URL
+Flask provides redirect functionality, which is used to redirect the browser's response to a specified URL.
+redirect function takes a URL as the argument and calls the function associated with that URL, when redirect function is called.
+
+
+
+
+Generating Dynamic URLs
+Flask provides another functionality - url_for, which can be used for generating dynamic URL's.
+url_for accepts a view function name as a mandatory argument and optional keyword arguments.
+The below expressions show the usage of url_for.
+
+    url_for('hello') returns the URL /
+
+    url_for('hello_user', username='Michael') returns /user/Michael
