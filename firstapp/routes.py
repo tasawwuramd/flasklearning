@@ -1,9 +1,11 @@
 import imp
-from flask import Flask, render_template
-from flask import redirect
+
+from flask import Flask
+from flask import redirect ,render_template
 from flask import redirect, url_for
 
 app = Flask(__name__)
+
 @app.route("/")
 def hello():
    return "Hello World!!!"
@@ -74,10 +76,8 @@ def display_users():
     users = ['John', 'Rosy', 'Jack', 'Sammy', 'Lilly']
     return render_template('users.html', title='Users', users=users)
 
-
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 # Flask is initially imported from flask module. A flask application is then initialised with expression app = Flask(__name__).
 

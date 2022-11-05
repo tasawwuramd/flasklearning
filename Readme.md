@@ -174,3 +174,97 @@ Templates in Flask also support the usage of conditional statements, mentioned i
 Loops in Templates
 It is also possible to write loops inside templates.
 You can write for loop inside {% ... %} blocks.
+
+
+
+Need for Template Inheritance
+As of now, the application contained two templates index.html and users.html.
+Some portions of both these templates are same. For example the head portion and the HTML code displaying navigation bar.
+When your application grows, you have to maintain several copies of these portions in many HTML templates.
+Whenever you wanted to make changes to head or navigation bar portions, you have to edit many HTML templates.
+Hence, it is not recommended to repeat the content.
+This can be achieved with Template Inheritance feature of jinja2.
+
+
+Template Inheritance
+Template Inheritance feature allows writing parts of HTML page layout, which are common to many templates, in one template and derives other templates from it.
+In this topic, you will create a template base.html, which holds common portions and also modify index.html and users.html such that they inherit contents of base.html.
+
+block control statement is used to define a place holder, where derived templates can insert their specific content.
+Each block is given a unique name, which is referenced inside derived templates.
+
+
+Deriving Index Template
+To inherit content from an existing template, extends template tag is used in the derived template.
+
+
+https://stackoverflow.com/questions/61005805/need-help-in-code-for-writing-view-functions-in-flask-python-web-framework#:~:text=.choice(quotes)-,Define%20below%20a%20view%20function%20%27display_quotes%27%2C%20which%20returns%20an,%27%20header%20%22Famous%20Quotes%22.
+
+
+Reorganizing the project
+sampleproject/
+
+   projenv/
+
+      ....
+
+   helloapp/
+
+       templates/
+
+          index.html
+
+          users.html
+
+       __init__.py
+
+       hello.py
+
+Application Initialization Settings
+Most of the times an application initialization settings are done in __init__.py file, present in an app folder.
+Hence, let's copy the below portion from hello.py and paste into __init__.py file, present in helloapp folder.
+    from flask import Flask
+
+    app = Flask(__name__)
+
+Also, remove the above portion from hello.py file.
+
+
+Application Views
+Now let's keep all the application view functions in a single file.
+For achieving that, remove the below-shown portion from hello.py file.
+    if __name__ == '__main__':
+    app.run()
+
+Now let's also rename the file hello.py to routes.py using mv command as shown below.
+
+
+
+Introduction to Extensions
+Flask is a microframework that can be used only to build simpler applications.
+Extra functionality can be added to an existing Flask application using an Extension
+Extension is an extra package, which might add functionality such as sending an email or connecting to a database.
+Few Extensions add entire new frameworks to build a certain type of applications such as REST API applications.
+
+
+Finding Extensions
+In general flask, extensions are named as Flask-Foo or Foo-Flask. Foo refers to an extension name.
+Information about most of the flask extensions is available at http://flask.pocoo.org/extensions/.
+Packages of flask extensions can also be searched at pypi.org.
+
+
+Installing Extensions
+Most easiest way of installing a flask extension is by using pip.
+
+    pip install flask-sqlalchemy
+
+
+
+Using Extensions
+An example of using Flask-Foo extension is shown below.
+
+    from flask-foo import Foo
+    foo = Foo()
+    app = Flask(__name__)
+    foo.init_app(app)
+

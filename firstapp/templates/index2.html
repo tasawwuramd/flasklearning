@@ -1,17 +1,15 @@
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <title>{{ title }}</title>
-</head>
+{% block content %}
 
-<body>
-    <div>HelloApp: <a href="/template/file2/">Home</a></div>
-    <hr>
-    {% if user %}
-    <h1>Hello {{user}}!!!</h1>
-    {% else %}
-    <h1>Hello World!!!</h1>
-    {% endif %}
-</body>
+        {% if user %}
 
-</html>
+        <h1>Hello {{user}}!!!</h1>
+
+        {% else %}
+
+        <h1>Hello World!!!</h1>
+
+        {% endif %}
+
+{% endblock %}

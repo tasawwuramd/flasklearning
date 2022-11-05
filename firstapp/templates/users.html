@@ -1,25 +1,13 @@
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-</head>
+{% block content %}
 
-<body>
-    <div>HelloApp: <a href="/">Home</a></div>
+        <h1> Users of the Application</h1>
 
-    <hr>
+        {% for user in users %}
 
-    <h1> Users of the Application</h1>
+        <li> {{user}} </li>
 
-    {% for user in users %}
+        {% endfor %}
 
-    <li> {{user}} </li>
-
-    {% endfor %}
-
-</body>
-
-</html>
+{% endblock %}
