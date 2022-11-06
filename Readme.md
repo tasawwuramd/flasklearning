@@ -268,3 +268,190 @@ An example of using Flask-Foo extension is shown below.
     app = Flask(__name__)
     foo.init_app(app)
 
+
+
+Introduction to Databases
+Flask, by default, doesn't provide any support for connecting to any database.
+Hence Application developers are free to choose any database and integrate it with their application
+A large number of databases are available in market, and many of them possess Python APIs.
+These databases can mainly be grouped into Relational and NoSQL databases.
+Relational databases store Structured data and NoSQL databases store Unstructured data.
+
+Connecting to Databases
+Database specific Flask extensions are available for connecting to various databases such as Flask-MySQL - an extension for MySQL
+On the other hand, SQLAlchemy can connect to many relational databases.
+SQLAlchemy is an Object Relational Mapper (ORM), which allows connecting to databases in an object-oriented way rather than using SQL queries.
+It converts the method calls into database commands and execute them.
+Flask-SQLAlchemy extension is a wrapper for SQLAlchemy. It can be installed using pip as shown below.
+    pip install flask-sqlalchemy
+
+
+FLASK-SQLAlchemy Configuration
+In this course, you will work with an SQLite database, hello.db.
+SQLite databases are light one's and don't require any separate database server like MySQL, and PostgreSQL.
+You need to tell the application, where it can find the database.
+In order to achieve it, let's create a configuration file config.py inside helloapp folder and add the below content.
+
+The Flask-SQLAlchemy extension understands the application database location from SQLALCHEMY_DATABASE_URI configuration variable.
+From config.py you can observe that SQLALCHEMY_DATABASE_URI value is set to value of environment variable DATABASE_URL.
+If DATABASE_URL value is not defined, then SQLALCHEMY_DATABASE_URI value is set to hello.db database located in sampleproject folder.
+The variable SQLALCHEMY_TRACK_MODIFICATIONS is a setting which allows tracking of modifications done to database. Currently it is set to False.
+
+Now modify helloapp/__init__.py file as shown below. It imports Config class defined in config.py, sets configurations of the application, and also creates a database instance.
+
+
+
+Introduction to Database Models
+Every table in a database is represented by a class, usually known as a database model.
+Also, each object of a database model class represents a row of the corresponding table.
+Hence, a database is a collection of classes.
+The ORM layer of SQLAlchemy performs all the translations required for mapping database model class objects into rows of the corresponding table.
+
+
+
+
+
+Database Migrations
+In order to propagate the model class definition into the database schema, you need to perform a Database Migration.
+This can be achieved using Flask-Migrate extension. It is a wrapper for Alembic - a database migration framework for SQLAlchemy.
+You can install Flask-Migrate extension using pip as shown below.
+    pip install flask-migrate
+This extension also helps in updating changes done to the existing database in future.
+After installing Flask-Migrate extension, create a Migration instance by adding the below lines to helloapp/__init__.py
+
+
+Creating a Migration Repository
+Alembic maintains a migration repository that stores the application migration scripts
+Whenever a change is done to a database schema, a new migration script is created and added to the repository.
+To reflect the changes in the database, the migration scripts are executed in the sequence they were created.
+You can now create a migration repository using flask db init command as shown below.
+
+
+
+Generating Database Migration Script
+Once the migration repository is created, Now let's perform the first migration using flask db migrate command shown below.
+It creates a migration script 4c1a9e3a41e0_creating_user_table.py in migrations/versions folder.
+It doesn't make any changes to the database.
+
+
+Applying Changes to Database
+The migration script created using flask db migrate command contains two function definitions: upgrade and downgrade.
+To apply the changes to a database, you have to run the command flask db upgrade as shown below
+
+
+
+Inserting Data into Database
+First of all, let's start a python shell using flask shell command as shown below.
+Now let's create two user objects using below code.
+
+    >>> from helloapp.models import User
+
+    >>> user1 = User(fname="James", lname="smith", email="james@abc.com")
+
+    >>> user2 = User(fname="Sam", lname="Billings", email="sam@xyz.com")
+
+
+Finally let's save the changes with below statements. Only db.session.commit() will write the changes to database.
+
+    >>> from helloapp import db
+
+    >>> db.session.add(user1)
+
+    >>> db.session.add(user2)
+
+    >>> db.session.commit()
+
+
+Querying a Database
+Now let's see how to query a table and fetch the records.
+
+In Flask all models have a query attribute, which can be used to run database queries.
+
+Consider the below-shown expressions. The first one fetches all records from the table user, and the second one filters only those records whose fname field has the value James.
+
+    >>> User.query.all()
+
+    [<User : James smith>, <User : Sam Billings>]
+
+    >>> User.query.filter(User.fname == 'James').all()
+
+    [<User : James smith>]
+
+
+
+Working with Web forms
+Introduction to Flask-WTF
+
+Web Forms are the basic building blocks of a Web Application.
+Web Forms are specifically used to accept input from users.
+
+Flask-WTF extension handles web forms. It is a wrapper around WTForms package and nicely integrates WTForms with Flask.
+
+Flask-WTF extension can be installed using pip as shown below.
+    pip install flask-wtf
+
+
+Flask-WTF Configuration
+Once Flask-WTF is installed successfully, SECRET_KEY configuration variable has to be set.
+So let's define a class variable SECRET_KEY in class Config of config.py file as shown below.
+
+The value of SECRET_KEY is set to value of environment variable with the same name. If that value is not defined, then it is set to a hard-coded string value.
+
+Flask and some of its extensions use SECRET_KEY value for generating signatures and tokens.
+
+Flask-WTF uses SECRET_KEY value to protect web forms against Cross-Site Request Forgery (CSRF).
+
+
+
+Defining User Form
+Flask-WTF uses classes to represent a web form. The fields of the form are defined as class variables.
+Now let's create a form named UserForm in helloapp/forms.py file, as shown below
+
+
+
+
+Writing a Template
+Now let's create a new template adduser.html, which renders UserForm to a user.
+
+All the fields defined in UserForm are rendered as HTML.
+
+The adduser.html template
+
+You can observe that the template adduser.html is derived from base.html.
+
+The template also expects an object of UserForm class to be passed as an argument. The argument is passed in a view function, which renders adduser.html template.
+
+The form.csrf_token template argument is required to protect the form against CSRF attacks.
+
+To include a field label, in the template, use the expression of the form {{ form.<field_name>.label }}. It is rendered as HTML.
+
+Similarly to include a field, use the expression of the form {{ form.<field_name> }}.
+
+
+
+
+Writing a View Function
+After defining the form template, now let's define the view function useradd to helloapp/routes.py, as shown below.
+
+
+
+
+Receiving Form Data
+Now try providing some data into the displayed form and click on submit button.
+
+It throws Method Not Allowed error to the user.
+
+This is because the defined adduser function doesn't have any logic to process data submitted by a user.
+
+Now let's modify useradd view function as suggested below.
+
+
+
+    from flask_wtf import FlaskForm
+    from wtforms import StringField, SubmitField, validators
+    #from wtforms.validators import DataRequired, Length, Email
+    class UserForm(FlaskForm):
+    fname = StringField("First Name",  [validators.DataRequired(), validators.Length(min=3, max=100)])
+    lname = StringField("Last Name", [validators.DataRequired(), validators.Length(min=3, max=100)])
+    email = StringField("Email", [validators.DataRequired(), validators.Email("Please provide a valid email address.")])
+    submit = SubmitField("Submit")
