@@ -1,10 +1,22 @@
 import imp
 
-from flask import Flask
+from flask import Flask, request
 from flask import redirect ,render_template
 from flask import redirect, url_for
 
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+from firstapp.models import User
+from .config import Config
+
+from .forms import UserForm
+
 app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+
+migrate = Migrate(app,db)
 
 @app.route("/")
 def hello():
@@ -75,6 +87,26 @@ def file2_template():
 def display_users():
     users = ['John', 'Rosy', 'Jack', 'Sammy', 'Lilly']
     return render_template('users.html', title='Users', users=users)
+
+# using webforms to render user form
+@app.route("/adduser/",methods=['GET', 'POST'])
+def useradd():
+    form = UserForm()
+    if request.method == 'POST':
+       user = User(fname=form.fname.data, lname=form.lname.data, email=form.email.data)
+       try:
+           db.session.add(user)
+           db.session.commit()
+       except Exception:
+           db.session.rollback()
+       return render_template('adduser_confirmation.html', title = 'Add User Confirmation', username=form.fname.data)
+    return render_template('adduser.html',title='User Input Form',form=form)
+
+#The function instantiates an object of UserForm, imported from forms.py.
+# Thus created from the object is passed to render_template, which further passes it to adduser.html template.
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
